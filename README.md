@@ -20,3 +20,9 @@ $ git clone https://github.com/santumahapatra/shopping-receipts-ruby
 $ gem install activesupport
 $ ruby main.rb
 ```
+
+## Checkout the file-output branch for generating text and pdf files
+
+```shell
+$ git checkout file-output
+```
