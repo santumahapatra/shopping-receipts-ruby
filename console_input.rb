@@ -14,7 +14,7 @@ class ConsoleInput
     take_input
     calculate_output
     calculate_total
-    print_values
+    print_values_on_terminal
   end
 
   private
@@ -44,7 +44,7 @@ class ConsoleInput
       end
     end
 
-    def print_values
+    def print_values_on_terminal
       @output_hash.each do |key, value|
         display_cost = convert_to_currency( value["cost"] )
         puts "#{value["name"]}  : #{display_cost}"

@@ -4,6 +4,13 @@ class TaxCalculator
   attr_reader :quantity, :name, :imported, :price, :sales_tax_exempt
   I18n.enforce_available_locales = false
 
+  @@exempt_items = {
+    "book"=> "book",
+    "chocolate bar"=> "food",
+    "box of chocolate"=> "food",
+    "packet of headache pill"=> "medical product"
+  }
+
   def initialize input
     words = input.split(" ")
     length = words.length
@@ -19,9 +26,8 @@ class TaxCalculator
       @imported = false
     end
 
-    item = words[1, words.length - 2].join(" ")
-
-    @sales_tax_exempt = false
+    item = words[1, words.length - 3].map{|s| s.singularize}.join(" ")
+    @sales_tax_exempt = check_exemption item
   end
 
   def output
@@ -53,5 +59,9 @@ class TaxCalculator
       n += 5 if @imported
       n += 10 if !@sales_tax_exempt
       n
+    end
+
+    def check_exemption item
+      @@exempt_items["#{item}"].nil? ? false : true
     end
 end
