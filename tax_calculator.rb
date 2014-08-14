@@ -14,11 +14,12 @@ class TaxCalculator
 
     if words.include? "imported"
       @imported = true
-      item = words[1, length - 2].join(" ")
+      words.delete "imported"
     else
       @imported = false
-      item = words[1, length - 2].join(" ")
     end
+
+    item = words[1, words.length - 2].join(" ")
 
     @sales_tax_exempt = false
   end
