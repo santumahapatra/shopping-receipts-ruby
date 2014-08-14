@@ -1,20 +1,23 @@
+require 'active_support/inflector'
+
 class TaxCalculator
   attr_reader :quantity, :name, :imported, :price, :sales_tax_exempt
+  I18n.enforce_available_locales = false
 
   def initialize input
     words = input.split(" ")
     length = words.length
 
-    @name = words[0, length - 3].join(" ")
+    @name = words[0, length - 2].join(" ")
     @quantity = words[0]
     @price = (words[length - 1].to_f * 100).to_i
 
-    if words[1] == "imported"
+    if words.include? "imported"
       @imported = true
-      item = words[1, length - 3].join(" ")
+      item = words[1, length - 2].join(" ")
     else
       @imported = false
-      item = words[1, length - 3].join(" ")
+      item = words[1, length - 2].join(" ")
     end
 
     @sales_tax_exempt = false
@@ -22,12 +25,10 @@ class TaxCalculator
 
   def output
     tax_amount = calculate_tax
-
-    puts @price, tax_amount
     {
       "name" => @name,
       "cost" => @price + tax_amount,
-      "taxes"  => tax_amount
+      "taxes" => tax_amount
     }
   end
 

@@ -1,3 +1,4 @@
+require 'active_support'
 require_relative 'tax_calculator.rb'
 
 class ConsoleInput
@@ -45,8 +46,15 @@ class ConsoleInput
 
     def print_values
       @output_hash.each do |key, value|
-        puts "#{value["name"]}  : #{value["cost"]}"
+        display_cost = convert_to_currency( value["cost"] )
+        puts "#{value["name"]}  : #{display_cost}"
       end
-      puts "Total: #{@total_hash["total_cost"]} (including #{@total_hash["total_taxes"]} in taxes)"
+      display_total_cost = convert_to_currency( @total_hash["total_cost"] )
+      display_total_taxes = convert_to_currency( @total_hash["total_taxes"] )
+      puts "Total: #{display_total_cost} (including #{display_total_taxes} in taxes)"
+    end
+
+    def convert_to_currency value
+      ActiveSupport::NumberHelper.number_to_currency(value.to_f/100)
     end
 end
