@@ -1,5 +1,7 @@
 require 'active_support'
 require_relative 'tax_calculator.rb'
+require_relative 'detail_generator.rb'
+require_relative 'generate_output.rb'
 
 class ConsoleInput
   attr_reader :input_hash, :output_hash, :total_hash
@@ -15,6 +17,7 @@ class ConsoleInput
     calculate_output
     calculate_total
     print_values_on_terminal
+    print_as_file
   end
 
   private
@@ -52,6 +55,22 @@ class ConsoleInput
       display_total_cost = convert_to_currency( @total_hash["total_cost"] )
       display_total_taxes = convert_to_currency( @total_hash["total_taxes"] )
       puts "Total: #{display_total_cost} (including #{display_total_taxes} in taxes)"
+    end
+
+    def print_as_file
+      
+      display_output_hash = @output_hash
+      display_total_hash = @total_hash
+      display_output_hash.each do |key, value|
+        value["cost"] = convert_to_currency( value["cost"] )
+      end
+      puts display_output_hash
+      display_total_hash["total_cost"] = convert_to_currency( display_total_hash["total_cost"] )
+      display_total_hash["total_taxes"] = convert_to_currency( display_total_hash["total_taxes"] )
+
+      receipt = [display_output_hash, display_total_hash]
+
+      GenerateOutput.new.execute(receipt)
     end
 
     def convert_to_currency value
